@@ -6,11 +6,13 @@ const List = ({ lists, match }) => {
   return (
     <div className="list-viewer-container">
       <h1>{list.list_name}</h1>
-      <ul>
         {list.list_items.map((item, index) => (
-          <li key={index}>{item.name}</li>
+          <div id="item-name" key={index}>
+            <input id="check" type="checkbox"/>
+            <label className="list-item" for="check">{item.name}</label>
+          </div>
+          //<li key={index}>{item.name}</li> - original solution
         ))}
-      </ul>
     </div>
   );
 };
