@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { collection, onSnapshot } from "@firebase/firestore";
+import { useEffect, useState } from "react";
+import db from "./services/firebase";
+import "./App.css";
+import MenuLists from "./components/MenuLists";
+import { Route, useRouteMatch } from "react-router";
+import List from "./components/List";
 
-function App() {
+const App = () => {
+  const [lists, setLists] = useState([]);
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, "List_Maker"), snapshot => {
+      setLists(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+    return () => unsub();
+  }, []);
+
+  const match = useRouteMatch();
+  console.log(match.params);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="main-container">
+      <div className="menu-container">
+        <div className="logo-container">
+          <img src="./images/logo.png" width="100%" alt="" />
+        </div>
+        <MenuLists lists={lists} />
+      </div>
+
+      <Route
+        exact
+        path="/:id"
+        render={props => <List lists={lists} {...props} />}
+      />
     </div>
   );
-}
+};
 
 export default App;
