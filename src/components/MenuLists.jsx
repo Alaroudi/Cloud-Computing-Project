@@ -5,8 +5,6 @@ import { useHistory } from "react-router-dom";
 const MenuLists = ({ lists }) => {
   const history = useHistory();
 
-  console.log(lists);
-
   return (
     <div className="list-container">
       {lists.map(list => (

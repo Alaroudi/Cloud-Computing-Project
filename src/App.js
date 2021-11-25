@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import db from "./services/firebase";
 import "./App.css";
 import MenuLists from "./components/MenuLists";
-import { Route, useRouteMatch } from "react-router";
+import { Route } from "react-router";
 import List from "./components/List";
 
 const App = () => {
@@ -15,9 +15,6 @@ const App = () => {
     });
     return () => unsub();
   }, []);
-
-  const match = useRouteMatch();
-  console.log(match.params);
 
   async function addList() {
     //Add a new list to firebase
