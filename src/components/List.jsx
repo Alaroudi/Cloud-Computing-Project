@@ -1,16 +1,19 @@
-import { deleteDoc, doc } from "@firebase/firestore";
+import { arrayUnion, deleteDoc, doc, updateDoc } from "@firebase/firestore";
 import React, { useState } from "react";
+import { Redirect } from "react-router";
 import db from "../services/firebase";
 
 const List = ({ lists, match }) => {
   const [text, setText] = useState("New Item");
 
   const list = lists.find(list => list.id === match.params.id);
-  if (!list) return <h1>List is not found</h1>;
+  if (!list) return <Redirect to="/" />;
 
-  function addItem() {
+  async function addItem() {
     //Add a firebase list element
-    console.log("Add '" + text + "' as an item to this list!");
+    await updateDoc(doc(db, "List_Maker", list.id), {
+      list_items: arrayUnion({ name: text, done: false })
+    });
   }
 
   function removeItem() {
@@ -23,7 +26,6 @@ const List = ({ lists, match }) => {
 
   async function deleteList() {
     //Remove this list and reroute to home
-
     await deleteDoc(doc(db, "List_Maker", list.id));
   }
 
@@ -41,6 +43,7 @@ const List = ({ lists, match }) => {
             id="check"
             onChange={() => handleCheck(item.name)}
             type="checkbox"
+            checked={item.done}
           />
           <label className="list-item" htmlFor="check">
             {item.name}
