@@ -66,3 +66,14 @@ h1 {
   margin-left: 1em;
   font: 150 15px/1.5 Helvetica, Verdana, sans-serif;
 }
+
+#check {
+  width: 29px;
+  height: 28px;
+  margin-right: 5px;
+}
+
+#item-name {
+  display: flex;
+  align-items: center;
+}

@@ -16,12 +16,13 @@ const List = ({ lists, match }) => {
     });
   }
 
-  function removeItem() {
+  async function removeItem(name) {
     //Remove a firebase list element
-    console.log(
-      "Remove the last item in the list: " +
-        list.list_items[list.list_items.length - 1].name
-    );
+    const updatedList = list.list_items.filter(item => item.name !== name);
+
+    await updateDoc(doc(db, "List_Maker", list.id), {
+      list_items: updatedList
+    });
   }
 
   async function deleteList() {
@@ -29,9 +30,18 @@ const List = ({ lists, match }) => {
     await deleteDoc(doc(db, "List_Maker", list.id));
   }
 
-  function handleCheck(name) {
+  async function handleCheck(event, name) {
     //Register checkbox status on firebase
-    console.log("Change the value of the checkbox for '" + name + "'");
+    const updatedList = list.list_items.map(item => {
+      if (item.name === name) {
+        item.done = event.target.checked;
+      }
+      return item;
+    });
+
+    await updateDoc(doc(db, "List_Maker", list.id), {
+      list_items: updatedList
+    });
   }
 
   return (
@@ -41,15 +51,20 @@ const List = ({ lists, match }) => {
         <div id="item-name" key={index}>
           <input
             id="check"
-            onChange={() => handleCheck(item.name)}
+            onChange={event => handleCheck(event, item.name)}
             type="checkbox"
             checked={item.done}
+          />
+          <input
+            className="listBtn"
+            onClick={() => removeItem(item.name)}
+            type="button"
+            value="X"
           />
           <label className="list-item" htmlFor="check">
             {item.name}
           </label>
         </div>
-        //<li key={index}>{item.name}</li> - original solution
       ))}
       <br />
       <input
@@ -57,12 +72,6 @@ const List = ({ lists, match }) => {
         onClick={addItem}
         type="button"
         value="Add Item"
-      />
-      <input
-        className="listBtn"
-        onClick={removeItem}
-        type="button"
-        value="Remove Item"
       />
       <input
         className="listBtn"
