@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "@firebase/firestore";
+import { addDoc, collection, onSnapshot } from "@firebase/firestore";
 import { useEffect, useState } from "react";
 import db from "./services/firebase";
 import "./App.css";
@@ -19,9 +19,11 @@ const App = () => {
   const match = useRouteMatch();
   console.log(match.params);
 
-  function addList() {
+  async function addList() {
     //Add a new list to firebase
-    console.log("Add the list '" + text + "' to firebase!");
+    const colRef = collection(db, "List_Maker");
+    const payload = { list_name: text, list_items: [] };
+    await addDoc(colRef, payload);
   }
 
   return (
@@ -31,8 +33,19 @@ const App = () => {
           <img src="./images/logo.png" width="100%" alt="" />
         </div>
         <MenuLists lists={lists} />
-        <input className="menuBtn" onClick={addList} type="button" value="Add List"/>
-        <input id="text" className="menuText" onChange={event => setText(event.target.value)} type="textField" value={text}/>
+        <input
+          className="menuBtn"
+          onClick={addList}
+          type="button"
+          value="Add List"
+        />
+        <input
+          id="text"
+          className="menuText"
+          onChange={event => setText(event.target.value)}
+          type="textField"
+          value={text}
+        />
       </div>
 
       <Route
