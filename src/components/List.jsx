@@ -33,7 +33,7 @@ const List = ({ lists, match }) => {
         {list.list_items.map((item, index) => (
           <div id="item-name" key={index}>
             <input id="check" onChange={() => handleCheck(item.name)} type="checkbox"/>
-            <label className="list-item" for="check">{item.name}</label>
+            <label className="list-item" htmlFor="check">{item.name}</label>
           </div>
           //<li key={index}>{item.name}</li> - original solution
         ))}
